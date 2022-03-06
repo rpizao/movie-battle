@@ -1,0 +1,83 @@
+@media (max-width: 900px){
+
+  .container{
+    flex-direction: column !important;
+  }
+
+  * {
+    font-size: small !important
+  }
+
+  .only-lg {
+    display: none;
+  }
+
+  .card {
+    .card-title{
+      .title {
+        font-size: 16px !important;
+      }
+    }
+
+    .description{
+      font-size: 10px !important;
+    }
+  }
+
+  .bottom > * {
+    font-size: x-small !important;
+  }
+
+  .header {
+    top: 1.5em !important;
+    font-size: xx-small !important;
+  }
+
+  .float-button {
+    bottom: 5em !important;
+    right: 1.5em !important;
+
+    i {
+      font-size: 4em !important;
+    }
+  }
+
+}
+
+.container:first-child {
+  padding-top: 3.5em;
+}
+
+.title {
+  font-size: 1.25rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: gray;
+}
+
+.back {
+  padding-bottom: 1em;
+  color: gray;
+  width: 4em;
+}
+
+.table tr.clickable:hover {
+  cursor: pointer;
+}
+
+.right {
+  text-align: right;
+}
+
+.float-button {
+  position: fixed;
+  bottom: 4em;
+  right: 2em;
+  color: blue !important;
+
+  i {
+    font-size: 4em;
+  }
+}

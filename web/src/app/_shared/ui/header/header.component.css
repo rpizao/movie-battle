@@ -1,0 +1,83 @@
+@media (max-width: 900px){
+  .navbar-brand {
+    font-size: larger;
+  }
+}
+
+.subtitle {
+  font-size: x-small;
+}
+
+.navbar-brand.subtitle {
+  font-size: x-small;
+  background: white;
+  color: green !important;
+  width: 11em;
+  text-align: center;
+}
+
+.tag {
+  position: absolute;
+  width: fit-content;
+  margin-left: 5px;
+  font-size: 8px;
+  padding: 2px;
+  padding-top: 0;
+  padding-bottom: 1px;
+  background: white;
+  color: green !important;
+  text-align: center;
+}
+
+.navbar-toggler {
+  border-color: white;
+  background: white;
+}
+
+
+.navbar-brand {
+  max-width: 70%;
+}
+
+.selected {
+  color: #13e413 !important;
+}
+
+.state {
+
+}
+
+@keyframes fa-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+
+.state {
+  font-style: italic;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.running {
+  color: rgba(255, 255, 255, 1) !important;
+  -webkit-animation: fa-blink .75s linear infinite;
+  -moz-animation: fa-blink .75s linear infinite;
+  -ms-animation: fa-blink .75s linear infinite;
+  -o-animation: fa-blink .75s linear infinite;
+  animation: fa-blink .75s linear infinite;
+}
+
+.on {
+  color: #13e413;
+  padding-right: 1em;
+}
+
+.off {
+  color: #d94848;
+  padding-right: 1em;
+}
+
+.nav-item {
+  text-align: center;
+}

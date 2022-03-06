@@ -1,0 +1,74 @@
+package br.com.rpizao.services;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.aspectj.weaver.Iterators;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import br.com.rpizao.dtos.AuthUser;
+import br.com.rpizao.dtos.Credentials;
+import br.com.rpizao.entities.User;
+import br.com.rpizao.exceptions.BusinessException;
+import br.com.rpizao.repositories.UserRepository;
+import br.com.rpizao.services.interfaces.IUserService;
+import br.com.rpizao.utils.CryptoUtils;
+
+@Service
+public class UserService implements IUserService{
+	
+	@Autowired
+	private UserRepository userRepository;
+	
+	@PostConstruct
+    private void init() throws NoSuchAlgorithmException, InvalidKeySpecException {
+		long estimateSize = userRepository.findAll().spliterator().estimateSize();
+		if(estimateSize != 0) return;
+		
+		String salt = CryptoUtils.generateSalt();
+        User john = new User();
+        john.setLogin("rpizao@gmail.com");
+        john.setSalt(salt);
+        john.setPassword(CryptoUtils.hash("12345", salt));
+        john.setCode(CryptoUtils.generateSalt());
+        john.setName("João");
+        
+        User mary = new User();
+        mary.setLogin("thanelfm@gmail.com");
+        mary.setSalt(salt);
+        mary.setPassword(CryptoUtils.hash("54321", salt));
+        mary.setCode(CryptoUtils.generateSalt());
+        mary.setName("Maria");
+        
+        userRepository.save(john);
+        userRepository.save(mary);
+    }
+
+	@Override
+	public AuthUser login(String login, String passw) throws BusinessException {
+		final User user = userRepository.findByLogin(login);
+		final String input = CryptoUtils.hash(passw, user.getSalt());
+		
+		if(user.getPassword().equals(input)) {
+			return AuthUser.builder()
+					.token(CryptoUtils.generateSalt())
+					.user(Credentials.builder()
+							.username(user.getName())
+							.code(user.getCode())
+							.build())
+					.build();
+		}
+		return null;
+	}
+	
+	@Override
+	public User findByCode(String code) {
+		return userRepository.findByCode(code);
+	}
+
+}

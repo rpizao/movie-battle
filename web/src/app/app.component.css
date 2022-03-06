@@ -1,0 +1,14 @@
+@media (max-width: 900px){
+  .message-box {
+    width: 100% !important;
+    font-size: 10px !important;
+    bottom: 5em !important;
+    right: 0 !important;
+  }
+}
+
+.message-box{
+  right: 1em;
+  position: absolute;
+  min-width: 20em;
+}

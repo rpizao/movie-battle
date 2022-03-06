@@ -1,0 +1,27 @@
+<!-- Header navigation -->
+<nav class="navbar fixed-top navbar-expand-lg navbar-light fixed-top">
+  <div class="container">
+    <img class="img-responsive" [src]="'../../../assets/logo.png'" style="width: 5%; margin-right: 3em;"/>
+    <span style="font-size: large;">Qual filme está melhor avaliado no IMDb?</span>
+
+    <button (click)="toggleNav()" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive" [ngClass]="{'show': navToggle}">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a href="javascript:void(0)" class="nav-link" (click)="logout()">
+                  <i class="bi bi-x-circle"></i>
+                  <br>
+                  <span class="subtitle">
+                    Logado como
+                  </span>
+                  <br>
+                  <label>{{user?.username?.toUpperCase()}}</label>
+                  <!-- <span class="tag"> [ {{user?.department}} ] </span> -->
+                </a>
+            </li>
+          </ul>
+    </div>
+  </div>
+</nav>

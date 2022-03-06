@@ -1,0 +1,127 @@
+@import "../_shared/css/pages.scss";
+
+
+.state {
+  font-weight: 600;
+  font-size: larger;
+}
+
+.running {
+  -webkit-animation: fa-blink .75s linear infinite;
+  -moz-animation: fa-blink .75s linear infinite;
+  -ms-animation: fa-blink .75s linear infinite;
+  -o-animation: fa-blink .75s linear infinite;
+  animation: fa-blink .75s linear infinite;
+}
+
+
+  /* Basic Card */
+.basic-card {
+  width:300px;
+  position: relative;
+  border-radius: 2em;
+  cursor: pointer;
+
+  -webkit-box-shadow: 0px 5px 5px 5px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px 5px 5px 5px rgba(0,0,0,0.3);
+  -o-box-shadow: 0px 5px 5px 5px rgba(0,0,0,0.3);
+  box-shadow: 0px 5px 5px 5px rgba(0,0,0,0.3);
+}
+
+.basic-card.selected {
+  background-color: rgb(155, 107, 17)
+}
+
+.basic-card.selected > * {
+  color: white !important;
+}
+
+.basic-card .card-content {
+    padding: 30px;
+}
+
+.basic-card .card-title {
+    font-size: 25px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.basic-card .card-text {
+    line-height: 1.6;
+}
+
+.basic-card .card-link {
+    padding: 25px;
+    width: -webkit-fill-available;
+}
+
+.basic-card .card-link a {
+    text-decoration: none;
+    position: relative;
+    padding: 10px 0px;
+}
+
+.basic-card .card-link a:after {
+    top: 30px;
+    content: "";
+    display: block;
+    height: 2px;
+    left: 50%;
+    position: absolute;
+    width: 0;
+
+    -webkit-transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    -moz-transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    -o-transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+}
+
+.basic-card .card-link a:hover:after {
+    width: 100%;
+    left: 0;
+}
+
+.button {
+  padding: 15px 25px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 5px #dfdcdc;
+}
+
+.button:hover {background-color: #05478e}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+table tr {
+  text-align: center;
+}
+
+
+.right {
+  color: #3e8e41;
+}
+
+.wrong {
+  color: red;
+}
+
+.message {
+  text-align: center;
+  font-size: xxx-large;
+  font-weight: 600;
+}
+
+.subtitle-message {
+  text-align: center;
+  font-size: medium;
+  font-weight: 600;
+}

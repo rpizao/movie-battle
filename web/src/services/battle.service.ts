@@ -1,0 +1,31 @@
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { AuthService } from "src/app/_auth/services/auth.service";
+import { AlertService } from "src/app/_shared/components/alert/alert.service";
+import { LoadingService } from "src/app/_shared/components/loading/loading.service";
+import { Battle } from "src/models/battle";
+import { GenericHttp } from "./generic-http";
+
+@Injectable({
+  providedIn: "root"
+})
+export class BattleService extends GenericHttp {
+
+  constructor(client: HttpClient, spinner: LoadingService, alert: AlertService, private authService: AuthService){
+    super(client, spinner, alert);
+    this.useLoading = false;
+  }
+
+  start(result: (battle: Battle) => void, error: (err:any) => void) {
+    this.post("/battle/start", {code: this.authService.getUserData().code}, result, error);
+  }
+
+  next(gameCode: string, result: (battle: Battle) => void, error: (err:any) => void) {
+    this.post("/battle/next", {gameCode: gameCode}, result, error);
+  }
+
+  finish(gameCode: string, totalHits: number, result: (battle: Battle) => void, error: (err:any) => void) {
+    this.post("/battle/finish", {gameCode, totalHits}, result, error);
+  }
+
+}

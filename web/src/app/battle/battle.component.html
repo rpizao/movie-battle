@@ -1,0 +1,77 @@
+<div class="container">
+
+  <table *ngIf="ended" class="table table-responsive-sm">
+    <tr>
+      <span class="state running">Você alcançou o limite de {{errorsLimit}} erros e o jogo terminou!</span>
+      <br>
+      <button style="margin-top: 1em;" class="button" (click)="restart()">Iniciar novo jogo</button>
+    </tr>
+  </table>
+
+  <table *ngIf="!ended" class="table table-responsive-sm">
+    <tbody>
+      <tr *ngIf="state == 'OFF'">
+        <button class="button" (click)="start()">Iniciar jogo</button>
+      </tr>
+      <tr *ngIf="state == 'INIT'">
+        <span class="state running">Criando o quiz...</span>
+      </tr>
+      <tr *ngIf="state == 'FINISH'">
+        <td>
+          <div class="basic-card {{position == 1 ? 'selected' : ''}}" (click)="selected(1)">
+            <div class="card-content">
+                <span class="card-title">
+                  {{question?.first?.name}}
+                </span>
+                <p class="card-text">
+                  {{question?.first?.description}}
+                </p>
+            </div>
+
+            <div class="card-link">
+                <span *ngIf="showAnswer">Avaliação: {{question?.first?.evaluation}}</span>
+            </div>
+          </div>
+        </td>
+
+        <td>
+          <div class="basic-card {{position == 2 ? 'selected' : ''}}" (click)="selected(2)">
+            <div class="card-content">
+              <span class="card-title">
+                {{question?.second?.name}}
+              </span>
+              <p class="card-text">
+                {{question?.second?.description}}
+              </p>
+            </div>
+
+            <div class="card-link">
+                <span *ngIf="showAnswer">Avaliação: {{question?.second?.evaluation}} pontos</span>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+  <div *ngIf="!ended && state != 'OFF'" class="subtitle-message">
+    <span style="color: blue;">
+      Acertos: {{totalHits}}
+    </span>
+    |
+    <span style="color: red;">
+      Erros: {{totalErrors}}
+    </span>
+    <br>
+  </div>
+
+  <div class="message" *ngIf="showAnswer && !ended">
+    <span class="{{answerIsCorrect() ? 'right' : 'wrong'}}" *ngIf="showAnswer">
+      {{answerIsCorrect() ? 'ACERTOU!!' : 'OPS!! :('}}
+    </span>
+    <br>
+    <button class="button" (click)="next()">Próximo >>></button>
+  </div>
+
+</div>
