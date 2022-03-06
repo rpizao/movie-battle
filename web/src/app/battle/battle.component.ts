@@ -138,7 +138,7 @@ export class BattleComponent implements OnInit {
   }
 
   get stateFinish(){
-    return !this.ended && this._state == 'FINISH';
+    return this._state == 'FINISH';
   }
 
   showCssQuestionFirst() {

@@ -36,14 +36,14 @@ public class UserService implements IUserService{
         john.setSalt(salt);
         john.setPassword(CryptoUtils.hash("12345", salt));
         john.setCode(CryptoUtils.generateSalt());
-        john.setName("João");
+        john.setName("Rafael");
         
         User mary = new User();
         mary.setLogin("thanelfm@gmail.com");
         mary.setSalt(salt);
         mary.setPassword(CryptoUtils.hash("54321", salt));
         mary.setCode(CryptoUtils.generateSalt());
-        mary.setName("Maria");
+        mary.setName("Thaís");
         
         userRepository.save(john);
         userRepository.save(mary);

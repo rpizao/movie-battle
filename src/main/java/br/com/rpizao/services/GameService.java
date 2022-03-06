@@ -46,7 +46,7 @@ public class GameService implements IGameService {
 		Game game = Game.builder()
 			.code(CryptoUtils.generateSalt())
 			.create(LocalDateTime.now())
-			.rounds(Arrays.asList(createRound()))
+			.rounds(Arrays.asList(createRoundFirst()))
 			.user(userService.findByCode(userCode)) 
 			.build();
 			
@@ -57,17 +57,54 @@ public class GameService implements IGameService {
 	@Override
 	public Battle nextQuestion(String code) throws BusinessException {
 		Game game = gameRepository.findByCode(code);
-		game.getRounds().add(createRound());
+		game.getRounds().add(createRound(game));
 		return converterToBattle(game);
 	}
 	
-	private Round createRound() throws BusinessException {
-		List<Movie> movies = movieService.loadingUniqueTupleOfMovies();
+	private Round createRoundFirst() throws BusinessException {
+		return createRound(null);
+	}
+	
+	private Round createRound(Game game) throws BusinessException {
+		List<Movie> movies = loadingMoviesForRound(game);
+		
 		return Round.builder()
 				.sequence(0)
 				.first(movies.get(0))
 				.second(movies.get(1))
 				.build();
+	}
+
+	private List<Movie> loadingMoviesForRound(Game game) {
+		List<Movie> movies = movieService.loadingUniqueTupleOfMovies();
+		boolean dubbed = areDubbedMoviesInTheGame(game, movies);
+		if(dubbed) {
+			return loadingMoviesForRound(game);
+		}
+		return movies;
+	}
+	
+	/**
+	 * Validando se os pares estão repetidos, independente da posição,
+	 * nas rodadas anteriores.
+	 * Por motivos óbvios, a regra só vale a partir da segunda rodada.
+	 * 
+	 * @param game
+	 * @param movies
+	 * @return TRUE se estiverem repetidos
+	 */
+	private boolean areDubbedMoviesInTheGame(Game game, List<Movie> movies) {
+		if(game == null) return false;
+		
+		final Movie firstMovieNew = movies.get(0);
+		final Movie secondMovieNew = movies.get(1);
+		
+		return game.getRounds().stream().anyMatch(r -> {
+			final Movie firstMovie = r.getFirst();
+			final Movie secondMovie = r.getSecond();
+			return (firstMovie.equals(firstMovieNew) && secondMovie.equals(secondMovieNew)) 
+						|| (firstMovie.equals(secondMovieNew) && secondMovie.equals(firstMovieNew));
+		});
 	}
 	
 	private Battle converterToBattle(Game game) {

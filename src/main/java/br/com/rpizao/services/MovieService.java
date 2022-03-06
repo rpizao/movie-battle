@@ -85,7 +85,7 @@ public class MovieService implements IMovieService {
 		List<Movie> tuple = Arrays.asList(first, second);
 		movieRepository.saveAll(tuple);
 		
-		// TODO: Preciso validar se a tupla já foi selecionada no mesmo jogo, caso sim, descartar.
+		
 		
 		return tuple;
 	}
