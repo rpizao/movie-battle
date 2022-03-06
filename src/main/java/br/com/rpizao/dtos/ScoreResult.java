@@ -13,5 +13,7 @@ import lombok.Setter;
 @Builder
 public class ScoreResult {
 	private String gameCode;
+	private String userCode;
+	private String userName;
 	private Long totalHits;
 }

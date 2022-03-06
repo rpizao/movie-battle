@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { error } from 'protractor';
 import { Battle } from 'src/models/battle';
 import { Question } from 'src/models/question';
+import { ScoreResult } from 'src/models/score.result';
 import { BattleService } from 'src/services/battle.service';
 import { AuthService } from '../_auth/services/auth.service';
 
@@ -13,7 +15,7 @@ import { AuthService } from '../_auth/services/auth.service';
 export class BattleComponent implements OnInit {
 
   private _battle: Battle;
-  state: "OFF" | "INIT" | "FINISH" = "OFF";
+  private _state: "HOME" | "QUIZ" | "FINISH" = "HOME";
   showAnswer: boolean = false;
   correct: boolean = false;
   private _totalErrors: number = 0;
@@ -23,10 +25,14 @@ export class BattleComponent implements OnInit {
 
   private _position: number = 0;
 
+  public scores: ScoreResult[];
+
   constructor(private battleService: BattleService, private authService: AuthService, private router: Router) {
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.listScores();
+  }
 
   get question() {
     return this._battle?.question;
@@ -54,16 +60,16 @@ export class BattleComponent implements OnInit {
   private searchBattle() {
     this._position = 0;
     this.showAnswer = false;
-    this.state = 'INIT';
+    this._state = 'QUIZ';
   }
 
   private finishBattle(r: Battle) {
     this._battle = r;
-    this.state = 'FINISH';
+    this._state = 'FINISH';
   }
 
   private clear() {
-    this.state = "OFF";
+    this._state = "HOME";
     this._totalErrors = 0;
     this._totalHits = 0;
     this._ended = false;
@@ -101,13 +107,46 @@ export class BattleComponent implements OnInit {
   }
 
   private finishGame(){
-    this._ended = true;
-    this.battleService.finish(this._battle.gameCode, this._totalHits, r => {}, error => this.clear());
+    this.battleService.finish(this._battle.gameCode, this._totalHits, r => {
+      this._ended = true;
+      this._state = 'FINISH';
+    }, error => this.clear());
   }
 
   answerIsCorrect(): boolean{
     let selectedOption = this.position == 1 ? this.question.first : this.question.second;
     return this.question.first.evaluation <= selectedOption.evaluation && this.question.second.evaluation <= selectedOption.evaluation;
+  }
+
+  backToHome(){
+    this.clear();
+    this.listScores();
+  }
+
+  private listScores() {
+    this.battleService.listScores(r => this.scores = r);
+  }
+
+  get stateHome(){
+    return !this.ended && this._state == 'HOME';
+  }
+
+  get stateQuizInit(){
+    return !this.ended && this._state == 'QUIZ';
+  }
+
+  get stateFinish(){
+    return !this.ended && this._state == 'FINISH';
+  }
+
+  showCssQuestionFirst() {
+    if(!this.showAnswer || this._position != 1) return "";
+    return this.answerIsCorrect() ? 'selected' : 'selected-wrong';
+  }
+
+  showCssQuestionSecond() {
+    if(!this.showAnswer || this._position != 2) return "";
+    return this.answerIsCorrect() ? 'selected' : 'selected-wrong';
   }
 
 }

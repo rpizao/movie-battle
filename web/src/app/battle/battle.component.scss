@@ -32,7 +32,15 @@
   background-color: rgb(155, 107, 17)
 }
 
+.basic-card.selected-wrong {
+  background-color: rgb(204, 24, 24)
+}
+
 .basic-card.selected > * {
+  color: white !important;
+}
+
+.basic-card.selected-wrong > * {
   color: white !important;
 }
 
@@ -41,8 +49,9 @@
 }
 
 .basic-card .card-title {
-    font-size: 25px;
-    font-family: 'Open Sans', sans-serif;
+  font-size: 25px;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
 }
 
 .basic-card .card-text {
@@ -91,13 +100,14 @@
   border: none;
   border-radius: 15px;
   box-shadow: 0 5px #dfdcdc;
+  margin-left: 2em;
 }
 
 .button:hover {background-color: #05478e}
 
 .button:active {
-  background-color: #3e8e41;
-  box-shadow: 0 5px #666;
+  background-color: #05478e;
+  box-shadow: 0 5px #dfdcdc;
   transform: translateY(4px);
 }
 
@@ -116,7 +126,7 @@ table tr {
 
 .message {
   text-align: center;
-  font-size: xxx-large;
+  font-size: large;
   font-weight: 600;
 }
 
@@ -124,4 +134,28 @@ table tr {
   text-align: center;
   font-size: medium;
   font-weight: 600;
+}
+
+@media (max-width: 900px){
+  .button {
+    padding: 5px 10px !important;
+    margin-left: 1em !important;
+  }
+}
+
+.float{
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:150px;
+	right:70px;
+	background-color:#0C9;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.my-float{
+	margin-top:22px;
 }

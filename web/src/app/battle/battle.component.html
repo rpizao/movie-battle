@@ -1,24 +1,33 @@
 <div class="container">
-
-  <table *ngIf="ended" class="table table-responsive-sm">
-    <tr>
-      <span class="state running">Você alcançou o limite de {{errorsLimit}} erros e o jogo terminou!</span>
-      <br>
-      <button style="margin-top: 1em;" class="button" (click)="restart()">Iniciar novo jogo</button>
-    </tr>
+  <table *ngIf="stateHome" class="table table-responsive-sm">
+    <tbody>
+      <tr>
+        <td>Nome</td>
+        <td>Acertos</td>
+      </tr>
+      <tr *ngFor="let s of scores; let i = index;">
+        <td>{{s.userName}}</td>
+        <td>{{s.totalHits}}</td>
+      </tr>
+    </tbody>
   </table>
 
-  <table *ngIf="!ended" class="table table-responsive-sm">
+  <table *ngIf="stateQuizInit" class="table table-responsive-sm">
     <tbody>
-      <tr *ngIf="state == 'OFF'">
-        <button class="button" (click)="start()">Iniciar jogo</button>
+      <tr>
+        <td colspan="2">
+          <span class="state running">Criando o quiz...</span>
+        </td>
       </tr>
-      <tr *ngIf="state == 'INIT'">
-        <span class="state running">Criando o quiz...</span>
-      </tr>
-      <tr *ngIf="state == 'FINISH'">
+    </tbody>
+
+  </table>
+
+  <table *ngIf="stateFinish" class="table table-responsive-sm">
+    <tbody>
+      <tr>
         <td>
-          <div class="basic-card {{position == 1 ? 'selected' : ''}}" (click)="selected(1)">
+          <div class="basic-card {{showCssQuestionFirst()}}" (click)="selected(1)">
             <div class="card-content">
                 <span class="card-title">
                   {{question?.first?.name}}
@@ -35,7 +44,7 @@
         </td>
 
         <td>
-          <div class="basic-card {{position == 2 ? 'selected' : ''}}" (click)="selected(2)">
+          <div class="basic-card {{showCssQuestionSecond()}}" (click)="selected(2)">
             <div class="card-content">
               <span class="card-title">
                 {{question?.second?.name}}
@@ -55,7 +64,15 @@
 
   </table>
 
-  <div *ngIf="!ended && state != 'OFF'" class="subtitle-message">
+
+  <table *ngIf="ended" class="table table-responsive-sm">
+    <tr>
+      <br>
+      <span class="state running">Você alcançou o limite de {{errorsLimit}} erros e o jogo terminou!</span>
+    </tr>
+  </table>
+
+  <div *ngIf="stateQuizInit || stateFinish" class="subtitle-message">
     <span style="color: blue;">
       Acertos: {{totalHits}}
     </span>
@@ -66,12 +83,21 @@
     <br>
   </div>
 
-  <div class="message" *ngIf="showAnswer && !ended">
-    <span class="{{answerIsCorrect() ? 'right' : 'wrong'}}" *ngIf="showAnswer">
-      {{answerIsCorrect() ? 'ACERTOU!!' : 'OPS!! :('}}
-    </span>
-    <br>
-    <button class="button" (click)="next()">Próximo >>></button>
+  <div *ngIf="showAnswer && !ended">
+    <a href="javascript:void(0)" (click)="next()" class="float">
+      <i class="fa fa-arrow-right my-float" aria-hidden="true"></i>
+    </a>
   </div>
+
+  <a *ngIf="stateHome" href="javascript:void(0)" (click)="start()" class="float">
+    <i class="fa fa-play my-float" aria-hidden="true"></i>
+  </a>
+
+  <a style="margin-right: 5em;" *ngIf="ended" href="javascript:void(0)" (click)="backToHome()" class="float">
+    <i class="fa fa-home my-float" aria-hidden="true"></i>
+  </a>
+  <a *ngIf="ended" href="javascript:void(0)" (click)="restart()" class="float">
+    <i class="fa fa-repeat my-float" aria-hidden="true"></i>
+  </a>
 
 </div>

@@ -4,6 +4,7 @@ import { AuthService } from "src/app/_auth/services/auth.service";
 import { AlertService } from "src/app/_shared/components/alert/alert.service";
 import { LoadingService } from "src/app/_shared/components/loading/loading.service";
 import { Battle } from "src/models/battle";
+import { ScoreResult } from "src/models/score.result";
 import { GenericHttp } from "./generic-http";
 
 @Injectable({
@@ -26,6 +27,10 @@ export class BattleService extends GenericHttp {
 
   finish(gameCode: string, totalHits: number, result: (battle: Battle) => void, error: (err:any) => void) {
     this.post("/battle/finish", {gameCode, totalHits}, result, error);
+  }
+
+  listScores(result: (scores: ScoreResult[]) => void, error?: (err:any) => void) {
+    this.get("/battle/scores", result, error);
   }
 
 }
