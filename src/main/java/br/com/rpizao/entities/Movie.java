@@ -29,6 +29,7 @@ public class Movie {
 	private String imdbID;
 	
 	@Column
+	@EqualsAndHashCode.Include
 	private String title;
 	
 	@Column

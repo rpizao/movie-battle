@@ -1,5 +1,6 @@
 package br.com.rpizao.services;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -24,14 +25,18 @@ public class ScoreService implements IScoreService {
 
 	@Override
 	public void publish(Score score) {
-		if(hasNewRecord(score)) {
+		Score lastScore = lastScore(score);
+		if(lastScore == null) {
 			scoreRepository.save(score);
+		}
+		else if(lastScore.getTotalHits() < score.getTotalHits()) {
+			lastScore.setTotalHits(score.getTotalHits());
+			scoreRepository.save(lastScore);
 		}
 	}
 	
-	private boolean hasNewRecord(Score score) {
-		final Score actualScore = scoreRepository.findByUser(score.getUser());
-		return actualScore.getTotalHits() < score.getTotalHits();
+	private Score lastScore(Score score) {
+		return scoreRepository.findByUser(score.getUser());
 	}
 
 	@Override
@@ -39,6 +44,7 @@ public class ScoreService implements IScoreService {
 		return StreamSupport
 			.stream(scoreRepository.findAll().spliterator(), false)
 			.map(score -> scoreConverter.convertFromDto(score))
+			.sorted(Comparator.comparingLong(ScoreResult::getTotalHits))
 			.collect(Collectors.toList());
 	}
 	
