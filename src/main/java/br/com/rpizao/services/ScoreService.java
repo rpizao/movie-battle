@@ -1,5 +1,6 @@
 package br.com.rpizao.services;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ public class ScoreService implements IScoreService {
 		return StreamSupport
 			.stream(scoreRepository.findAll().spliterator(), false)
 			.map(score -> scoreConverter.convertFromDto(score))
-			.sorted(Comparator.comparingLong(ScoreResult::getTotalHits))
+			.sorted(Comparator.comparingLong(ScoreResult::getTotalHits).reversed())
 			.collect(Collectors.toList());
 	}
 	
