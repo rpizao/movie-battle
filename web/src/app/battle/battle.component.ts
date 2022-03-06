@@ -76,6 +76,8 @@ export class BattleComponent implements OnInit {
   }
 
   selected(position: number){
+    if(this.showAnswer) return;
+
     this._position = position;
     this.showAnswer = true;
 
