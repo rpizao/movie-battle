@@ -129,6 +129,7 @@ public class GameService implements IGameService {
 				.name(movie.getTitle())
 				.description(movie.getPlot())
 				.evaluation(BigDecimal.valueOf(rating * votes).setScale(2, RoundingMode.HALF_EVEN))
+				.picture(movie.getPoster())
 				.build();
 	}
 

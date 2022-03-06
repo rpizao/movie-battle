@@ -8,7 +8,8 @@ public final class RandomListUtils {
 	private static final List<String> WORDS = 
 			Arrays.asList("love", "work", "money", "sad", "terror", "animal", "island", "secure", "football", 
 					"king", "last", "wall", "smell", "terrible", "shadow", "hello", "bye bye", "mom dad", "back",
-					"sexy", "another", "war game", "razor", "contraints");
+					"sexy", "another", "war game", "razor", "contraints", "avengers", "zodiac", "signs", "crossover",
+					"district", "phantom");
 
 	public static String randomWord() {
 		return WORDS.get(RandomUtils.nextInt(0, WORDS.size()));

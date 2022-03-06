@@ -46,10 +46,10 @@
 
 .basic-card .card-content {
     padding: 30px;
+    height: 450px;
 }
 
 .basic-card .card-title {
-  font-size: 25px;
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
 }
@@ -61,6 +61,8 @@
 .basic-card .card-link {
     padding: 25px;
     width: -webkit-fill-available;
+    position: absolute;
+    bottom: 0px;
 }
 
 .basic-card .card-link a {
@@ -158,4 +160,10 @@ table tr {
 
 .my-float{
 	margin-top:22px;
+}
+
+.img-responsive {
+  width: 100%;
+  height: 70%;
+  margin-top: 1em;
 }

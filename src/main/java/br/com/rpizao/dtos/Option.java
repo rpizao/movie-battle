@@ -18,4 +18,5 @@ public class Option {
 	private String description;
 	private String since;
 	private BigDecimal evaluation;
+	private String picture;
 }

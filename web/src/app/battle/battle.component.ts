@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { error } from 'protractor';
 import { Battle } from 'src/models/battle';
+import { Option } from 'src/models/option';
 import { Question } from 'src/models/question';
 import { ScoreResult } from 'src/models/score.result';
 import { BattleService } from 'src/services/battle.service';
@@ -149,6 +150,11 @@ export class BattleComponent implements OnInit {
   showCssQuestionSecond() {
     if(!this.showAnswer || this._position != 2) return "";
     return this.answerIsCorrect() ? 'selected' : 'selected-wrong';
+  }
+
+  showPictureIfAvaiable(first: Option) {
+    if(first?.picture && first?.picture != "N/A") return first.picture;
+    return "../assets/no-picture.png";
   }
 
 }

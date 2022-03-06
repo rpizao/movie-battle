@@ -1,17 +1,11 @@
 package br.com.rpizao.entities;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.deser.std.NumberDeserializers.BigDecimalDeserializer;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -54,4 +48,7 @@ public class Movie {
 	
 	@Column
 	public String plot;
+	
+	@Column
+	public String poster;
 }

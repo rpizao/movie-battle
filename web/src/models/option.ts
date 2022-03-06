@@ -3,4 +3,5 @@ export interface Option {
   description: string;
   since: string;
   evaluation: number;
+  picture: string;
 }
