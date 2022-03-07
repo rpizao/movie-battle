@@ -1,6 +1,6 @@
 ### MOVIE BATTLE ###
 
-Projeto consiste em uma agenda para controle das remadas por clube, além do controle básico de pagamentos e acompanhamento das evoluções dos alunos.
+Projeto é um quiz para testar seu conhecimento sobre a popularidade de filmes no IMDb.
 
 ### EXECUTANDO A APLICAÇÃO ###
 
