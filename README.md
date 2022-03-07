@@ -1,6 +1,6 @@
 ### MOVIE BATTLE ###
 
-Projeto é um quiz para testar seu conhecimento sobre a popularidade de filmes no IMDb.
+Projeto é um quiz para testar seu conhecimento sobre a popularidade dos filmes no IMDb.
 
 ### EXECUTANDO A APLICAÇÃO ###
 
