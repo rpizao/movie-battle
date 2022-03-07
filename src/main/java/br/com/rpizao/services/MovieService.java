@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -30,21 +31,26 @@ public class MovieService implements IMovieService {
 	
 	private ObjectMapper mapper;
 	
+	@Value("${user.api.imdb.search_by_title}")
+	private String apiImdbSearchByTitle;
+	
+	@Value("${user.api.imdb.search_by_id}")
+	private String apiImdbSearchById;
+	
+	
 	@PostConstruct
 	private void init() {
-		ObjectMapper mapper = new ObjectMapper();
+		mapper = new ObjectMapper();
 	    mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 	    mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
 	    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-	    this.mapper = mapper;
 	}
 
 	private Movie findEveryoneMovieInApi() throws BusinessException {
 		final String term = RandomListUtils.randomWord();
 	    
 	    try {
-	    	final String listMoviesContent = 
-	    			searchInExternalApi("http://www.omdbapi.com/?apikey=9a2b28a8&type=movie&s=" + term);
+	    	final String listMoviesContent = searchInExternalApi(apiImdbSearchByTitle + term);
 	    	final ObjectNode node = mapper.readValue(listMoviesContent, ObjectNode.class);
 	    	if(Boolean.FALSE.equals(Boolean.valueOf(node.get("Response").textValue()))) {
 	    		return findEveryoneMovieInApi();
@@ -53,9 +59,7 @@ public class MovieService implements IMovieService {
 	    	final List<Movie> movies = Arrays.asList(mapper.readValue(node.get("Search").toString(), Movie[].class));
 	    	Movie movieSelected = RandomListUtils.randomOnList(movies);
 	    	
-	    	final String movieSelectedContent = 
-	    			searchInExternalApi(
-	    					"https://www.omdbapi.com/?apikey=9a2b28a8&i=" + movieSelected.getImdbID());
+	    	final String movieSelectedContent = searchInExternalApi(apiImdbSearchById + movieSelected.getImdbID());
 			movieSelected = mapper.readValue(movieSelectedContent, Movie.class);
 	    	
 			if(!movieIsValid(movieSelected)) {
@@ -83,10 +87,7 @@ public class MovieService implements IMovieService {
 		}
 		
 		List<Movie> tuple = Arrays.asList(first, second);
-		movieRepository.saveAll(tuple);
-		
-		
-		
+		movieRepository.saveAll(tuple);	
 		return tuple;
 	}
 	

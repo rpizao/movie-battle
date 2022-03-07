@@ -1,5 +1,7 @@
 package br.com.rpizao.entities;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,5 +39,5 @@ public class Score {
 	
 	@NotNull
 	@Column
-	private Long totalHits;
+	private BigDecimal percentual;
 }

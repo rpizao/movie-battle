@@ -1,5 +1,7 @@
 package br.com.rpizao.dtos;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,5 +17,5 @@ public class ScoreResult {
 	private String gameCode;
 	private String userCode;
 	private String userName;
-	private Long totalHits;
+	private BigDecimal percentual;
 }

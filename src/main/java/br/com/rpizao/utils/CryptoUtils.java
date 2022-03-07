@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import br.com.rpizao.exceptions.BusinessException;
 
 public final class CryptoUtils {
@@ -49,4 +51,8 @@ public final class CryptoUtils {
         }
         return generatedPassword;
     }
+	
+	public static String randomString(int size) {
+		return RandomStringUtils.randomAlphabetic(size);
+	}
 }

@@ -27,7 +27,11 @@ public class AuthController {
 	public ResponseEntity<AuthUser> login(@RequestBody Credentials credentials) throws BusinessException {
 		final AuthUser authUserIfAccept = 
 				userService.login(credentials.getUsername(), credentials.getPassword());
-		return new ResponseEntity<>(authUserIfAccept, HttpStatus.OK);
+		
+		if(authUserIfAccept != null) {
+			return new ResponseEntity<>(authUserIfAccept, HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 	}
 	
 	@GetMapping(value = "logout")

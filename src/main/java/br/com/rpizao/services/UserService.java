@@ -1,13 +1,7 @@
 package br.com.rpizao.services;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.PostConstruct;
 
-import org.aspectj.weaver.Iterators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +20,7 @@ public class UserService implements IUserService{
 	private UserRepository userRepository;
 	
 	@PostConstruct
-    private void init() throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private void init() {
 		long estimateSize = userRepository.findAll().spliterator().estimateSize();
 		if(estimateSize != 0) return;
 		
@@ -35,14 +29,14 @@ public class UserService implements IUserService{
         john.setLogin("rpizao@gmail.com");
         john.setSalt(salt);
         john.setPassword(CryptoUtils.hash("12345", salt));
-        john.setCode(CryptoUtils.generateSalt());
+        john.setCode(CryptoUtils.randomString(5));
         john.setName("Rafael");
         
         User mary = new User();
         mary.setLogin("thanelfm@gmail.com");
         mary.setSalt(salt);
         mary.setPassword(CryptoUtils.hash("54321", salt));
-        mary.setCode(CryptoUtils.generateSalt());
+        mary.setCode(CryptoUtils.randomString(5));
         mary.setName("Thaís");
         
         userRepository.save(john);

@@ -1,7 +1,5 @@
 package br.com.rpizao.utils;
 
-import org.apache.commons.lang3.StringUtils;
-
 public final class NumberUtils {
 
 	public static Integer toInteger(String value) {

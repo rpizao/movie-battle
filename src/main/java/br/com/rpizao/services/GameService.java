@@ -3,19 +3,22 @@ package br.com.rpizao.services;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.rpizao.converters.GameConverter;
 import br.com.rpizao.dtos.Battle;
-import br.com.rpizao.dtos.Option;
-import br.com.rpizao.dtos.Question;
+import br.com.rpizao.dtos.ScoreResult;
 import br.com.rpizao.entities.Game;
 import br.com.rpizao.entities.Movie;
 import br.com.rpizao.entities.Round;
 import br.com.rpizao.entities.Score;
+import br.com.rpizao.entities.User;
 import br.com.rpizao.exceptions.BusinessException;
 import br.com.rpizao.repositories.GameRepository;
 import br.com.rpizao.services.interfaces.IGameService;
@@ -23,7 +26,6 @@ import br.com.rpizao.services.interfaces.IMovieService;
 import br.com.rpizao.services.interfaces.IScoreService;
 import br.com.rpizao.services.interfaces.IUserService;
 import br.com.rpizao.utils.CryptoUtils;
-import br.com.rpizao.utils.NumberUtils;
 
 @Service
 public class GameService implements IGameService {
@@ -40,25 +42,47 @@ public class GameService implements IGameService {
 	@Autowired
 	private IScoreService scoreService;
 	
+	
+	private static final GameConverter gameConverter = new GameConverter();
+	
 
 	@Override
 	public Battle start(String userCode) throws BusinessException {
+		User user = userService.findByCode(userCode);
+		if(user == null) {
+			throw new BusinessException("Código de usuário está em branco ou não existe.");
+		}
+		
+		List<Round> rounds = new ArrayList<>();
+		rounds.add(createRoundFirst());
+		
 		Game game = Game.builder()
-			.code(CryptoUtils.generateSalt())
+			.code(CryptoUtils.randomString(5))
 			.create(LocalDateTime.now())
-			.rounds(Arrays.asList(createRoundFirst()))
-			.user(userService.findByCode(userCode)) 
+			.rounds(rounds)
+			.user(user) 
 			.build();
 			
 		gameRepository.save(game);
-		return converterToBattle(game);
+		return gameConverter.convertFromDto(game);
 	}
 	
 	@Override
 	public Battle nextQuestion(String code) throws BusinessException {
 		Game game = gameRepository.findByCode(code);
+		if(game == null) {
+			throw new BusinessException("Código de jogo está em branco ou não existe.");
+		}
+		
+		final boolean answerIsPendent = game.getRounds().stream().anyMatch(r -> r.getCorrect() == null);
+		if(answerIsPendent) {
+			throw new BusinessException("Não é permitido ir para o quiz seguinte, antes de responder o atual.");
+		}
+		
 		game.getRounds().add(createRound(game));
-		return converterToBattle(game);
+		gameRepository.save(game);
+		
+		return gameConverter.convertFromDto(game);
 	}
 	
 	private Round createRoundFirst() throws BusinessException {
@@ -106,43 +130,50 @@ public class GameService implements IGameService {
 						|| (firstMovie.equals(secondMovieNew) && secondMovie.equals(firstMovieNew));
 		});
 	}
-	
-	private Battle converterToBattle(Game game) {
-		Round lastRound = game.getRounds().get(game.getRounds().size() - 1);
-		
-		Question lastQuestion = Question.builder()
-				.first(converterToOption(lastRound.getFirst()))
-				.second(converterToOption(lastRound.getSecond()))
-				.build();
-		
-		return Battle.builder()
-					.gameCode(game.getCode())
-					.question(lastQuestion)
-					.build();
-	}
-
-	private Option converterToOption(Movie movie) {
-		final double rating = NumberUtils.toFloat(movie.getImdbRating());
-		final int votes = NumberUtils.toInteger(movie.getImdbVotes());
-		
-		return Option.builder()
-				.name(movie.getTitle())
-				.description(movie.getPlot())
-				.evaluation(BigDecimal.valueOf(rating * votes).setScale(2, RoundingMode.HALF_EVEN))
-				.picture(movie.getPoster())
-				.build();
-	}
 
 	@Override
-	public void finish(String code, Long totalHits) throws BusinessException {
-		Game gameEnded = gameRepository.findByCode(code);
+	public void finish(ScoreResult scoreResult) throws BusinessException {
+		Game gameEnded = gameRepository.findByCode(scoreResult.getGameCode());
+		if(gameEnded == null) {
+			throw new BusinessException("Código de jogo está em branco ou não existe.");
+		}		
+		
 		gameEnded.setFinish(LocalDateTime.now());
 		gameRepository.save(gameEnded);
 		
+		final double percentual = calculateHitsPercentual(gameEnded);
 		scoreService.publish(
 				Score.builder()
 					.user(gameEnded.getUser())
-					.totalHits(totalHits)
+					.percentual(BigDecimal.valueOf(percentual).setScale(2, RoundingMode.HALF_EVEN))
 					.build());
+	}
+
+	private double calculateHitsPercentual(Game gameEnded) {
+		BigDecimal total = new BigDecimal(gameEnded.getRounds().size());
+		BigDecimal hits = new BigDecimal(gameEnded.getRounds().stream().filter(Round::getCorrect).collect(Collectors.toList()).size());
+		//BigDecimal percentual = total.multiply(hits.divide(total, 4, RoundingMode.HALF_EVEN));
+		BigDecimal percentual = BigDecimal.valueOf(100).multiply(hits.divide(total, 4, RoundingMode.HALF_EVEN));
+		return percentual.doubleValue();
+	}
+
+	@Override
+	public void answer(String gameCode, Integer selectedPosition) throws BusinessException {
+		Game game = gameRepository.findByCode(gameCode);
+		
+		Optional<Round> roundAnswer = 
+				game.getRounds().stream().filter(r -> r.getCorrect() == null).findFirst();
+		
+		if(!roundAnswer.isPresent()) {
+			throw new BusinessException("Rodada de perguntas não foi encontrada.");			
+		}
+		roundAnswer.get().setCorrect(checkIfPositionCorrect(roundAnswer.get(), selectedPosition));
+		gameRepository.save(game);
+	}
+	
+	private boolean checkIfPositionCorrect(Round round, Integer position) {
+		Movie movieSelected = position == 1 ? round.getFirst() : round.getSecond();
+	    return round.getFirst().getEvaluation().doubleValue() <= movieSelected.getEvaluation().doubleValue() 
+	    			&& round.getSecond().getEvaluation().doubleValue() <= movieSelected.getEvaluation().doubleValue();
 	}
 }

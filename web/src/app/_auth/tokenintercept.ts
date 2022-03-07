@@ -18,16 +18,8 @@ export class TokenIntercept implements HttpInterceptor {
         const token    = this.authService.getToken();
         const headers    = {};
         headers['Access-Control-Allow-Origin'] = '*';
-        /* headers["Access-Control-Expose-Headers"] = "Content-Length, X-JSON";
-        headers["Access-Control-Allow-Methods"] = "GET, POST";
-        headers["Access-Control-Allow-Headers"] = "*";
-
-        if (token !== null) {
-            headers['Authorization'] = 'Bearer ' + token;
-            headers['Access-Control-Allow-Origin'] = '*';
-            headers['Access-Control-Allow-Methods'] = "GET, POST, PATCH, PUT, DELETE, OPTIONS";
-            headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, X-Auth-Token';
-        } */
+        headers["Access-Control-Allow-Methods"] = "GET, POST, PUT";
+        headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, X-Auth-Token';
 
         const modified = request.clone(
             {

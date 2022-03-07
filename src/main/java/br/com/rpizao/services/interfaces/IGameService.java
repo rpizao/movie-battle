@@ -1,6 +1,7 @@
 package br.com.rpizao.services.interfaces;
 
 import br.com.rpizao.dtos.Battle;
+import br.com.rpizao.dtos.ScoreResult;
 import br.com.rpizao.exceptions.BusinessException;
 
 public interface IGameService {
@@ -21,12 +22,22 @@ public interface IGameService {
 	Battle nextQuestion(String code) throws BusinessException;
 	
 	/**
-	 * Finaliza a batalha, armazena o resultado do usuário.
+	 * Finaliza uma rodada selecionando entre as duas opções.
 	 * 
-	 * @param code código do jogo
-	 * @param totalHits total de acertos do usuário
+	 * @param code
+	 * @param selectedPosition
+	 * 
 	 * @return
 	 * @throws BusinessException
 	 */
-	void finish(String code, Long totalHits) throws BusinessException;
+	void answer(String code, Integer selectedPosition) throws BusinessException;
+	
+	/**
+	 * Finaliza a batalha, armazena o resultado do usuário.
+	 * 
+	 * @param scoreResult
+	 * @return
+	 * @throws BusinessException
+	 */
+	void finish(ScoreResult scoreResult) throws BusinessException;
 }

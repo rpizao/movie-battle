@@ -1,5 +1,8 @@
 package br.com.rpizao.entities;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import br.com.rpizao.utils.NumberUtils;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,4 +56,12 @@ public class Movie {
 	
 	@Column
 	public String poster;
+	
+	public BigDecimal getEvaluation() {
+		if(!NumberUtils.isNumeric(imdbRating) || !NumberUtils.isNumeric(imdbVotes)) return BigDecimal.ZERO;
+		
+		final double rating = NumberUtils.toFloat(imdbRating);
+		final int votes = NumberUtils.toInteger(imdbVotes);
+		return BigDecimal.valueOf(rating * votes).setScale(2, RoundingMode.HALF_EVEN);
+	}
 }

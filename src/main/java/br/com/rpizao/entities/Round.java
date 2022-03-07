@@ -44,4 +44,6 @@ public class Round {
 	@JoinColumn(name = "second_movie_id")
 	private Movie second;
 	
+	@Column
+	private Boolean correct;
 }

@@ -3,11 +3,11 @@
     <tbody>
       <tr>
         <td style="font-weight: 600;">Nome</td>
-        <td style="font-weight: 600;">Acertos</td>
+        <td style="font-weight: 600;">% Acerto</td>
       </tr>
       <tr *ngFor="let s of scores; let i = index;">
         <td>{{s.userName}}</td>
-        <td>{{s.totalHits}}</td>
+        <td>{{s.percentual}}</td>
       </tr>
     </tbody>
   </table>
@@ -27,7 +27,7 @@
     <tbody>
       <tr>
         <td>
-          <div class="basic-card {{showCssQuestionFirst()}}" (click)="selected(1)">
+          <div class="basic-card {{showCssQuestionFirst()}}" (click)="selectedAnswer(1)">
             <div class="card-content">
               <span class="card-title">
                 {{question?.first?.name}}
@@ -46,7 +46,7 @@
         </td>
 
         <td>
-          <div class="basic-card {{showCssQuestionSecond()}}" (click)="selected(2)">
+          <div class="basic-card {{showCssQuestionSecond()}}" (click)="selectedAnswer(2)">
             <div class="card-content">
               <span class="card-title">
                 {{question?.second?.name}}

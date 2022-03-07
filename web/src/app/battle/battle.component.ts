@@ -76,17 +76,19 @@ export class BattleComponent implements OnInit {
     this._ended = false;
   }
 
-  selected(position: number){
+  selectedAnswer(position: number){
     if(this.showAnswer) return;
-
     this._position = position;
-    this.showAnswer = true;
 
-    const correct = this.answerIsCorrect();
-    if(correct) this._totalHits++;
-    else this._totalErrors++;
+    this.battleService.answer(this._battle.gameCode, position, r => {
+      this.showAnswer = true;
 
-    if(this._totalErrors == this._errorsLimit) this.finishGame();
+      const correct = this.answerIsCorrect();
+      if(correct) this._totalHits++;
+      else this._totalErrors++;
+
+      if(this._totalErrors == this._errorsLimit) this.finishGame();
+    }, error => this._position = 0);
   }
 
   get position() {

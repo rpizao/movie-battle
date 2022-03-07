@@ -22,11 +22,15 @@ export class BattleService extends GenericHttp {
   }
 
   next(gameCode: string, result: (battle: Battle) => void, error: (err:any) => void) {
-    this.post("/battle/next", {gameCode: gameCode}, result, error);
+    this.get("/battle/" + gameCode + "/next", result, error);
+  }
+
+  answer(gameCode: string, selectedPosition: number, result: (battle: Battle) => void, error?: (err:any) => void) {
+    this.put("/battle/" + gameCode + "/answer/" + selectedPosition, {}, result, error);
   }
 
   finish(gameCode: string, totalHits: number, result: (battle: Battle) => void, error: (err:any) => void) {
-    this.post("/battle/finish", {gameCode, totalHits}, result, error);
+    this.put("/battle/finish", {gameCode, totalHits}, result, error);
   }
 
   listScores(result: (scores: ScoreResult[]) => void, error?: (err:any) => void) {
