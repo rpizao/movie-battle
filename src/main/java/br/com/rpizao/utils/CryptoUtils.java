@@ -47,7 +47,7 @@ public final class CryptoUtils {
             // Get complete hashed password in hex format
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new BusinessException("Erro ao encryptar senha", e);
+            throw new BusinessException("Erro ao encryptar senha");
         }
         return generatedPassword;
     }

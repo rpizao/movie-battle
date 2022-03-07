@@ -68,7 +68,7 @@ public class MovieService implements IMovieService {
 			return movieSelected;
 	    	
 		} catch (Exception e) {
-			throw new BusinessException("Erro ao converter json para Movie class.", e);
+			throw new BusinessException("Erro ao converter json para Movie class.");
 		}
 	}
 	
