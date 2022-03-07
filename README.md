@@ -12,3 +12,8 @@ Projeto consiste em uma agenda para controle das remadas por clube, além do con
 6. Execute o comando npm start
 
 Basta acessar a aplicação através da url http://localhost:4200.
+
+### CREDENCIAIS DE ACESSO ###
+Os acessos criados são:
+Login: rpizao@gmail | senha: 12345
+Login: thanelfm@gmail.com | senha: 54321
