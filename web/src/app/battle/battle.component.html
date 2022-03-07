@@ -3,11 +3,11 @@
     <tbody>
       <tr>
         <td style="font-weight: 600;">Nome</td>
-        <td style="font-weight: 600;">% Acerto</td>
+        <td style="font-weight: 600;">Acertos</td>
       </tr>
       <tr *ngFor="let s of scores; let i = index;">
         <td>{{s.userName}}</td>
-        <td>{{s.percentual}}</td>
+        <td>{{s.value}}</td>
       </tr>
     </tbody>
   </table>

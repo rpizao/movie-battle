@@ -15,7 +15,6 @@ public class MovieConverter extends Converter<Movie, Option> {
 		return Option.builder()
 				.name(movie.getTitle())
 				.description(movie.getPlot())
-				.evaluation(movie.getEvaluation())
 				.picture(movie.getPoster())
 				.build();
 	}

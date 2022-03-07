@@ -1,18 +1,20 @@
 package br.com.rpizao.services;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.rpizao.converters.GameConverter;
+import br.com.rpizao.converters.MovieConverter;
+import br.com.rpizao.converters.RoundConverter;
 import br.com.rpizao.dtos.Battle;
+import br.com.rpizao.dtos.Option;
+import br.com.rpizao.dtos.Question;
 import br.com.rpizao.dtos.ScoreResult;
 import br.com.rpizao.entities.Game;
 import br.com.rpizao.entities.Movie;
@@ -42,8 +44,9 @@ public class GameService implements IGameService {
 	@Autowired
 	private IScoreService scoreService;
 	
-	
+	private static final MovieConverter movieConverter = new MovieConverter();
 	private static final GameConverter gameConverter = new GameConverter();
+	private static final RoundConverter roundConverter = new RoundConverter();
 	
 
 	@Override
@@ -93,7 +96,6 @@ public class GameService implements IGameService {
 		List<Movie> movies = loadingMoviesForRound(game);
 		
 		return Round.builder()
-				.sequence(0)
 				.first(movies.get(0))
 				.second(movies.get(1))
 				.build();
@@ -136,44 +138,62 @@ public class GameService implements IGameService {
 		Game gameEnded = gameRepository.findByCode(scoreResult.getGameCode());
 		if(gameEnded == null) {
 			throw new BusinessException("Código de jogo está em branco ou não existe.");
-		}		
+		}
+		
+		if(checkIfExistsRoundPendent(gameEnded)) {
+			throw new BusinessException("Não é possível encerrar um desafio que possua perguntas pendentes.");
+		}
 		
 		gameEnded.setFinish(LocalDateTime.now());
 		gameRepository.save(gameEnded);
 		
-		final double percentual = calculateHitsPercentual(gameEnded);
 		scoreService.publish(
 				Score.builder()
 					.user(gameEnded.getUser())
-					.percentual(BigDecimal.valueOf(percentual).setScale(2, RoundingMode.HALF_EVEN))
+					.value(calculateHits(gameEnded))
 					.build());
 	}
 
-	private double calculateHitsPercentual(Game gameEnded) {
-		BigDecimal total = new BigDecimal(gameEnded.getRounds().size());
-		BigDecimal hits = new BigDecimal(gameEnded.getRounds().stream().filter(Round::getCorrect).collect(Collectors.toList()).size());
-		//BigDecimal percentual = total.multiply(hits.divide(total, 4, RoundingMode.HALF_EVEN));
-		BigDecimal percentual = BigDecimal.valueOf(100).multiply(hits.divide(total, 4, RoundingMode.HALF_EVEN));
-		return percentual.doubleValue();
+	private BigDecimal calculateHits(Game gameEnded) {
+		return new BigDecimal(gameEnded.getRounds().stream().filter(Round::getCorrect).count());
 	}
 
 	@Override
-	public void answer(String gameCode, Integer selectedPosition) throws BusinessException {
+	public Question answer(String gameCode, Integer selectedPosition) throws BusinessException {
 		Game game = gameRepository.findByCode(gameCode);
 		
 		Optional<Round> roundAnswer = 
 				game.getRounds().stream().filter(r -> r.getCorrect() == null).findFirst();
 		
 		if(!roundAnswer.isPresent()) {
-			throw new BusinessException("Rodada de perguntas não foi encontrada.");			
+			throw new BusinessException("Falha ao tentar responder um quiz (já estava respondido).");			
 		}
 		roundAnswer.get().setCorrect(checkIfPositionCorrect(roundAnswer.get(), selectedPosition));
 		gameRepository.save(game);
+		
+		return converterWithEvaluation(roundAnswer.get());
+	}
+
+	private Question converterWithEvaluation(Round roundAnswer) {
+		Option firstOptionWithEvaluation = movieConverter.convertFromDto(roundAnswer.getFirst());
+		firstOptionWithEvaluation.setEvaluation(roundAnswer.getFirst().getEvaluation());
+		Option secondOptionWithEvaluation = movieConverter.convertFromDto(roundAnswer.getSecond());
+		secondOptionWithEvaluation.setEvaluation(roundAnswer.getSecond().getEvaluation());
+		
+		Question question = roundConverter.convertFromDto(roundAnswer);
+		question.setFirst(firstOptionWithEvaluation);
+		question.setSecond(secondOptionWithEvaluation);
+		
+		return question;
 	}
 	
 	private boolean checkIfPositionCorrect(Round round, Integer position) {
 		Movie movieSelected = position == 1 ? round.getFirst() : round.getSecond();
 	    return round.getFirst().getEvaluation().doubleValue() <= movieSelected.getEvaluation().doubleValue() 
 	    			&& round.getSecond().getEvaluation().doubleValue() <= movieSelected.getEvaluation().doubleValue();
+	}
+	
+	private boolean checkIfExistsRoundPendent(Game game) {
+		return game.getRounds().stream().anyMatch(r -> r.getCorrect() == null);
 	}
 }

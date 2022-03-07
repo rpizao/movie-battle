@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.rpizao.dtos.Battle;
 import br.com.rpizao.dtos.Credentials;
+import br.com.rpizao.dtos.Question;
 import br.com.rpizao.dtos.ScoreResult;
 import br.com.rpizao.exceptions.BusinessException;
 import br.com.rpizao.services.interfaces.IGameService;
@@ -54,10 +55,10 @@ public class BattleController {
 	}
 	
 	@PutMapping(value = "/{code}/answer/{position}")
-	public ResponseEntity<Battle> awnser(@PathVariable(name = "code") String gameCode, @PathVariable(name = "position") Integer position) {
+	public ResponseEntity<Question> awnser(@PathVariable(name = "code") String gameCode, @PathVariable(name = "position") Integer position) {
 		try {
-			gameService.answer(gameCode, position);
-			return new ResponseEntity<>(HttpStatus.OK);
+			Question questionUpdated = gameService.answer(gameCode, position);
+			return new ResponseEntity<>(questionUpdated, HttpStatus.OK);
 			
 		} catch (BusinessException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

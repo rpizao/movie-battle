@@ -17,5 +17,5 @@ public class ScoreResult {
 	private String gameCode;
 	private String userCode;
 	private String userName;
-	private BigDecimal percentual;
+	private BigDecimal value;
 }

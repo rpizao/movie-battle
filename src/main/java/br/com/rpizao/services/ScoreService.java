@@ -29,8 +29,8 @@ public class ScoreService implements IScoreService {
 		if(lastScore == null) {
 			scoreRepository.save(score);
 		}
-		else if(lastScore.getPercentual().doubleValue() < score.getPercentual().doubleValue()) {
-			lastScore.setPercentual(score.getPercentual());
+		else if(lastScore.getValue().doubleValue() < score.getValue().doubleValue()) {
+			lastScore.setValue(score.getValue());
 			scoreRepository.save(lastScore);
 		}
 	}
@@ -43,8 +43,8 @@ public class ScoreService implements IScoreService {
 	public List<ScoreResult> list() {
 		return StreamSupport
 			.stream(scoreRepository.findAll().spliterator(), false)
-			.map(score -> scoreConverter.convertFromDto(score))
-			.sorted(Comparator.comparing(ScoreResult::getPercentual).reversed())
+			.map(scoreConverter::convertFromDto)
+			.sorted(Comparator.comparing(ScoreResult::getValue).reversed())
 			.collect(Collectors.toList());
 	}
 	

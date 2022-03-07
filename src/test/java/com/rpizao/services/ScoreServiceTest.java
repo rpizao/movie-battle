@@ -62,13 +62,13 @@ public class ScoreServiceTest {
 		scoreService.publish(
 				Score.builder()
 				.user(userTest)
-				.percentual(BigDecimal.valueOf(35))
+				.value(BigDecimal.valueOf(35))
 				.build());
 		
 		Score score = scoreRepository.findByUser(userTest);
 		
 		Assert.assertNotNull(score);
-		Assert.assertEquals(35, score.getPercentual().intValue());
+		Assert.assertEquals(35, score.getValue().intValue());
 	}
 	
 	@Test
@@ -76,19 +76,19 @@ public class ScoreServiceTest {
 		scoreService.publish(
 				Score.builder()
 				.user(userTest)
-				.percentual(BigDecimal.valueOf(50,1))
+				.value(BigDecimal.valueOf(50.1))
 				.build());
 		
 		scoreService.publish(
 				Score.builder()
 				.user(userTest)
-				.percentual(BigDecimal.valueOf(50,2))
+				.value(BigDecimal.valueOf(50.2))
 				.build());
 		
 		Score score = scoreRepository.findByUser(userTest);
 		
 		Assert.assertNotNull(score);
-		Assert.assertEquals(50,2, score.getPercentual().doubleValue());
+		Assert.assertEquals(50.2, score.getValue().doubleValue(), 0);
 	}
 	
 	@Test
@@ -96,19 +96,19 @@ public class ScoreServiceTest {
 		scoreService.publish(
 				Score.builder()
 				.user(userTest)
-				.percentual(BigDecimal.valueOf(34))
+				.value(BigDecimal.valueOf(34))
 				.build());
 		
 		scoreService.publish(
 				Score.builder()
 				.user(userTest)
-				.percentual(BigDecimal.valueOf(33))
+				.value(BigDecimal.valueOf(33))
 				.build());
 		
 		Score score = scoreRepository.findByUser(userTest);
 		
 		Assert.assertNotNull(score);
-		Assert.assertEquals(34, score.getPercentual().intValue());
+		Assert.assertEquals(34, score.getValue().intValue());
 	}
 	
 	@Test
@@ -116,7 +116,7 @@ public class ScoreServiceTest {
 		scoreService.publish(
 				Score.builder()
 				.user(userTest)
-				.percentual(BigDecimal.valueOf(35))
+				.value(BigDecimal.valueOf(35))
 				.build());
 		
 		List<ScoreResult> scores = scoreService.list();

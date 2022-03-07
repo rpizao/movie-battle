@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Question {
-	private Integer sequence;
 	private Option first;
 	private Option second;
+	private Boolean correct;
 }

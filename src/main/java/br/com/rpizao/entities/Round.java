@@ -31,10 +31,6 @@ public class Round {
 	private Long id;
 	
 	@NotNull
-	@Column
-	private Integer sequence;
-	
-	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "first_movie_id")
 	private Movie first;

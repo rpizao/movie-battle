@@ -15,14 +15,14 @@ public class ScoreConverter extends Converter<Score, ScoreResult> {
 		return ScoreResult.builder()
 				.userCode(score.getUser().getCode())
 				.userName(score.getUser().getName())
-				.percentual(score.getPercentual())
+				.value(score.getValue())
 				.build();
 	}
 
 	private static Score convertToEntity(ScoreResult scoreResult) {
 		return Score.builder()
 				.user(User.builder().code(scoreResult.getUserCode()).build())
-				.percentual(scoreResult.getPercentual())
+				.value(scoreResult.getValue())
 				.build();
 	}
 }

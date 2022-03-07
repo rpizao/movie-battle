@@ -1,6 +1,7 @@
 package br.com.rpizao.services.interfaces;
 
 import br.com.rpizao.dtos.Battle;
+import br.com.rpizao.dtos.Question;
 import br.com.rpizao.dtos.ScoreResult;
 import br.com.rpizao.exceptions.BusinessException;
 
@@ -24,13 +25,13 @@ public interface IGameService {
 	/**
 	 * Finaliza uma rodada selecionando entre as duas opções.
 	 * 
-	 * @param code
-	 * @param selectedPosition
+	 * @param code código do jogo
+	 * @param selectedPosition 1, caso tenha escolhido a primeira opção, 2 para segunda.
 	 * 
-	 * @return
+	 * @return a questão (DTO da entidade Round) indicando o acerto e os valores de cada opção (filme).
 	 * @throws BusinessException
 	 */
-	void answer(String code, Integer selectedPosition) throws BusinessException;
+	Question answer(String code, Integer selectedPosition) throws BusinessException;
 	
 	/**
 	 * Finaliza a batalha, armazena o resultado do usuário.

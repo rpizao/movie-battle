@@ -76,6 +76,7 @@ public class GameServiceTest {
 	
 	@Test
 	public void sucessoAoSolicitarOProximoDesafioDentroDeUmJogoEmAndamento() {
+		gameService.answer(battle.getGameCode(), 1); // Simulando uma resposta, selecionando primeiro filme.
 		Battle battleUpdated = gameService.nextQuestion(battle.getGameCode());
 		
 		Assert.assertNotNull(battleUpdated);
@@ -88,9 +89,19 @@ public class GameServiceTest {
 		gameService.nextQuestion("Codigo01");
 	}
 	
+	@Test(expected = BusinessException.class)
+	public void falhaAoSolicitarOProximoDesafioTendoDesafioPendenteDeResposta() {
+		Battle battleUpdated = gameService.nextQuestion(battle.getGameCode());
+		
+		Assert.assertNotNull(battleUpdated);
+		Assert.assertEquals(battle, battleUpdated);
+		Assert.assertNotEquals(battleUpdated.getQuestion(), battle.getQuestion());
+	}
+	
 	@Test
 	public void sucessoAoFinalizarUmJogo() {
-		gameService.finish(ScoreResult.builder().gameCode(battle.getGameCode()).percentual(BigDecimal.valueOf(50)).build());
+		gameService.answer(battle.getGameCode(), 1); // Simulando uma resposta, selecionando primeiro filme.
+		gameService.finish(ScoreResult.builder().gameCode(battle.getGameCode()).value(BigDecimal.valueOf(50)).build());
 		
 		Game game = gameRepository.findByCode(battle.getGameCode());
 		Assert.assertNotNull(game.getFinish());
@@ -98,9 +109,35 @@ public class GameServiceTest {
 	
 	@Test(expected = BusinessException.class)
 	public void falhaAoTentarFinalizarUmJogoPassandoCodigoDesconhecido() {
-		gameService.finish(ScoreResult.builder().gameCode("Codigo01").percentual(BigDecimal.valueOf(50)).build());
+		gameService.finish(ScoreResult.builder().gameCode("Codigo01").value(BigDecimal.valueOf(50)).build());
 		
 		Game game = gameRepository.findByCode(battle.getGameCode());
 		Assert.assertNotNull(game.getFinish());
+	}
+	
+	@Test(expected = BusinessException.class)
+	public void falhaAoFinalizarUmJogoQuePossuiRodadasNaoRespondidas() {
+		gameService.finish(ScoreResult.builder().gameCode(battle.getGameCode()).value(BigDecimal.valueOf(50)).build());
+		
+		Game game = gameRepository.findByCode(battle.getGameCode());
+		Assert.assertNotNull(game.getFinish());
+	}
+	
+	@Test
+	public void sucessoAoResponderUmQuizNoJogo() {
+		Battle newBattle = gameService.start(userCodeTest);
+		gameService.answer(newBattle.getGameCode(), 1);
+		
+		Game gameUpdated = gameRepository.findByCode(newBattle.getGameCode());
+		
+		Assert.assertNotNull(gameUpdated);
+		Assert.assertTrue(gameUpdated.getRounds().stream().allMatch(r -> r.getCorrect() != null));
+	}
+	
+	@Test(expected = BusinessException.class)
+	public void falhaAoTentarResponderUmQuizJaRespondido() {
+		Battle newBattle = gameService.start(userCodeTest);
+		gameService.answer(newBattle.getGameCode(), 1);
+		gameService.answer(newBattle.getGameCode(), 1);
 	}
 }

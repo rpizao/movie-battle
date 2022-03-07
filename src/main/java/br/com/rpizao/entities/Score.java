@@ -39,5 +39,5 @@ public class Score {
 	
 	@NotNull
 	@Column
-	private BigDecimal percentual;
+	private BigDecimal value;
 }

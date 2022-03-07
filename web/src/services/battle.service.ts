@@ -4,6 +4,7 @@ import { AuthService } from "src/app/_auth/services/auth.service";
 import { AlertService } from "src/app/_shared/components/alert/alert.service";
 import { LoadingService } from "src/app/_shared/components/loading/loading.service";
 import { Battle } from "src/models/battle";
+import { Question } from "src/models/question";
 import { ScoreResult } from "src/models/score.result";
 import { GenericHttp } from "./generic-http";
 
@@ -25,7 +26,7 @@ export class BattleService extends GenericHttp {
     this.get("/battle/" + gameCode + "/next", result, error);
   }
 
-  answer(gameCode: string, selectedPosition: number, result: (battle: Battle) => void, error?: (err:any) => void) {
+  answer(gameCode: string, selectedPosition: number, result: (question: Question) => void, error?: (err:any) => void) {
     this.put("/battle/" + gameCode + "/answer/" + selectedPosition, {}, result, error);
   }
 

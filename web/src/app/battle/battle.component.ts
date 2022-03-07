@@ -80,7 +80,8 @@ export class BattleComponent implements OnInit {
     if(this.showAnswer) return;
     this._position = position;
 
-    this.battleService.answer(this._battle.gameCode, position, r => {
+    this.battleService.answer(this._battle.gameCode, position, questionUpdated => {
+      this._battle.question = questionUpdated;
       this.showAnswer = true;
 
       const correct = this.answerIsCorrect();
@@ -119,8 +120,7 @@ export class BattleComponent implements OnInit {
   }
 
   answerIsCorrect(): boolean{
-    let selectedOption = this.position == 1 ? this.question.first : this.question.second;
-    return this.question.first.evaluation <= selectedOption.evaluation && this.question.second.evaluation <= selectedOption.evaluation;
+    return this._battle.question.correct;
   }
 
   backToHome(){

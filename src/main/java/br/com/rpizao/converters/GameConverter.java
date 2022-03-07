@@ -9,8 +9,8 @@ import br.com.rpizao.entities.Game;
 import br.com.rpizao.entities.Round;
 
 public class GameConverter extends Converter<Game, Battle> {
-	
-	private static final MovieConverter movieConverter = new MovieConverter();
+
+	private static final RoundConverter roundConverter = new RoundConverter();
 
 	public GameConverter() {
 		super(GameConverter::convertToDto, GameConverter::convertToEntity);
@@ -18,12 +18,7 @@ public class GameConverter extends Converter<Game, Battle> {
 
 	private static Battle convertToDto(Game game) {
 		Round lastRound = game.getRounds().get(game.getRounds().size() - 1);
-		
-		Question lastQuestion = Question.builder()
-				.sequence(lastRound.getSequence())
-				.first(movieConverter.convertFromDto(lastRound.getFirst()))
-				.second(movieConverter.convertFromDto(lastRound.getSecond()))
-				.build();
+		Question lastQuestion = roundConverter.convertFromDto(lastRound);
 		
 		return Battle.builder()
 					.gameCode(game.getCode())
