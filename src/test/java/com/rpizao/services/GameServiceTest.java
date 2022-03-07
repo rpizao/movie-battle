@@ -1,7 +1,5 @@
 package com.rpizao.services;
 
-import java.math.BigDecimal;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +14,6 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import com.rpizao.config.MovieBattleJpaConfig;
 
 import br.com.rpizao.dtos.Battle;
-import br.com.rpizao.dtos.ScoreResult;
 import br.com.rpizao.entities.Game;
 import br.com.rpizao.entities.User;
 import br.com.rpizao.exceptions.BusinessException;
@@ -101,7 +98,7 @@ public class GameServiceTest {
 	@Test
 	public void sucessoAoFinalizarUmJogo() {
 		gameService.answer(battle.getGameCode(), 1); // Simulando uma resposta, selecionando primeiro filme.
-		gameService.finish(ScoreResult.builder().gameCode(battle.getGameCode()).value(BigDecimal.valueOf(50)).build());
+		gameService.finish(battle.getGameCode());
 		
 		Game game = gameRepository.findByCode(battle.getGameCode());
 		Assert.assertNotNull(game.getFinish());
@@ -109,7 +106,7 @@ public class GameServiceTest {
 	
 	@Test(expected = BusinessException.class)
 	public void falhaAoTentarFinalizarUmJogoPassandoCodigoDesconhecido() {
-		gameService.finish(ScoreResult.builder().gameCode("Codigo01").value(BigDecimal.valueOf(50)).build());
+		gameService.finish("Codigo01");
 		
 		Game game = gameRepository.findByCode(battle.getGameCode());
 		Assert.assertNotNull(game.getFinish());
@@ -117,7 +114,7 @@ public class GameServiceTest {
 	
 	@Test(expected = BusinessException.class)
 	public void falhaAoFinalizarUmJogoQuePossuiRodadasNaoRespondidas() {
-		gameService.finish(ScoreResult.builder().gameCode(battle.getGameCode()).value(BigDecimal.valueOf(50)).build());
+		gameService.finish(battle.getGameCode());
 		
 		Game game = gameRepository.findByCode(battle.getGameCode());
 		Assert.assertNotNull(game.getFinish());

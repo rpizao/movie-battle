@@ -15,7 +15,6 @@ import br.com.rpizao.converters.RoundConverter;
 import br.com.rpizao.dtos.Battle;
 import br.com.rpizao.dtos.Option;
 import br.com.rpizao.dtos.Question;
-import br.com.rpizao.dtos.ScoreResult;
 import br.com.rpizao.entities.Game;
 import br.com.rpizao.entities.Movie;
 import br.com.rpizao.entities.Round;
@@ -134,8 +133,8 @@ public class GameService implements IGameService {
 	}
 
 	@Override
-	public void finish(ScoreResult scoreResult) throws BusinessException {
-		Game gameEnded = gameRepository.findByCode(scoreResult.getGameCode());
+	public void finish(String gameCode) throws BusinessException {
+		Game gameEnded = gameRepository.findByCode(gameCode);
 		if(gameEnded == null) {
 			throw new BusinessException("Código de jogo está em branco ou não existe.");
 		}

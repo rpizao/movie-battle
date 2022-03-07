@@ -19,7 +19,7 @@ export class BattleService extends GenericHttp {
   }
 
   start(result: (battle: Battle) => void, error: (err:any) => void) {
-    this.post("/battle/start", {code: this.authService.getUserData().code}, result, error);
+    this.get("/battle/" + this.authService.getUserData().code + "/start", result, error);
   }
 
   next(gameCode: string, result: (battle: Battle) => void, error: (err:any) => void) {
@@ -30,8 +30,8 @@ export class BattleService extends GenericHttp {
     this.put("/battle/" + gameCode + "/answer/" + selectedPosition, {}, result, error);
   }
 
-  finish(gameCode: string, totalHits: number, result: (battle: Battle) => void, error: (err:any) => void) {
-    this.put("/battle/finish", {gameCode, totalHits}, result, error);
+  finish(gameCode: string, result: (battle: Battle) => void, error: (err:any) => void) {
+    this.put("/battle/" + gameCode + "/finish", {}, result, error);
   }
 
   listScores(result: (scores: ScoreResult[]) => void, error?: (err:any) => void) {

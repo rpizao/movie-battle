@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.rpizao.dtos.AuthUser;
-import br.com.rpizao.dtos.Credentials;
+import br.com.rpizao.dtos.UserCredentials;
 import br.com.rpizao.exceptions.BusinessException;
 import br.com.rpizao.services.interfaces.IUserService;
 
@@ -24,7 +24,7 @@ public class AuthController {
 	private IUserService userService;
 	
 	@PostMapping(value = "login")
-	public ResponseEntity<AuthUser> login(@RequestBody Credentials credentials) throws BusinessException {
+	public ResponseEntity<AuthUser> login(@RequestBody UserCredentials credentials) throws BusinessException {
 		final AuthUser authUserIfAccept = 
 				userService.login(credentials.getUsername(), credentials.getPassword());
 		

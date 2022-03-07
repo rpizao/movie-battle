@@ -11,8 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Credentials {
-	private String gameCode;
+public class UserCredentials {
 	private String code;
 	private String username;
 	private String password;

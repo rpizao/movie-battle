@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.rpizao.dtos.AuthUser;
-import br.com.rpizao.dtos.Credentials;
+import br.com.rpizao.dtos.UserCredentials;
 import br.com.rpizao.entities.User;
 import br.com.rpizao.exceptions.BusinessException;
 import br.com.rpizao.repositories.UserRepository;
@@ -51,7 +51,7 @@ public class UserService implements IUserService{
 		if(user.getPassword().equals(input)) {
 			return AuthUser.builder()
 					.token(CryptoUtils.generateSalt())
-					.user(Credentials.builder()
+					.user(UserCredentials.builder()
 							.username(user.getName())
 							.code(user.getCode())
 							.build())

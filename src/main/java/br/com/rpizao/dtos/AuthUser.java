@@ -14,6 +14,6 @@ import lombok.Setter;
 public class AuthUser {
 
 	private String token;
-	private Credentials user;
+	private UserCredentials user;
 	
 }

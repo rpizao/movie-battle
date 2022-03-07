@@ -14,7 +14,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ScoreResult {
-	private String gameCode;
 	private String userCode;
 	private String userName;
 	private BigDecimal value;

@@ -113,7 +113,7 @@ export class BattleComponent implements OnInit {
   }
 
   private finishGame(){
-    this.battleService.finish(this._battle.gameCode, this._totalHits, r => {
+    this.battleService.finish(this._battle.gameCode, r => {
       this._ended = true;
       this._state = 'FINISH';
     }, error => this.clear());
